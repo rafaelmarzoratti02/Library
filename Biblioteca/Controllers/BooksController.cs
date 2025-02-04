@@ -1,5 +1,6 @@
 ﻿using Biblioteca.Models;
 using Biblioteca.Persistency;
+using Library.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,8 +37,43 @@ public class BooksController : ControllerBase
     [HttpPost]
     public ActionResult Post(CreateBookInputModel model)
     {
-        return CreatedAtAction(nameof(GetById), new { id = 1}, model);
+        var book = model.ToEntity();
+        _context.Books.Add(book);
+        _context.SaveChanges();
+
+        return CreatedAtAction(nameof(GetById), new { id = book.Id}, book);
     }
 
+    [HttpPut("{id}")]
+    public IActionResult Put(int id, UpdateBookInputModel model)
+    {
+        var book = _context.Books.FirstOrDefault(e => e.Id == id);
+        if(book is null)
+        {
+            return NotFound();
+        }
+
+        book.Update(model.Title, model.Autor, model.ISBN, model.AnoDePublicacao);
+        _context.Books.Update(book);
+        _context.SaveChanges();
+
+        return NoContent();
+    }
+
+    [HttpDelete]
+    public IActionResult Delete(int id)
+    {
+        var book = _context.Books.FirstOrDefault(e => e.Id == id);
+        if(book is null)
+        {
+            return NotFound();
+        }
+
+        book.SetAsDeleted();
+        _context.Books.Update(book);
+        _context.SaveChanges();
+
+        return NoContent();
+    }
 
 }
