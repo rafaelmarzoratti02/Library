@@ -1,4 +1,4 @@
-using Biblioteca.Persistency;
+using Biblioteca.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 var connectionString = builder.Configuration.GetConnectionString("BibliotecaCs");
 
-builder.Services.AddDbContext<BooksDbContext>(e => e.UseInMemoryDatabase(connectionString));
+builder.Services.AddDbContext<BooksDbContext>(e => e.UseSqlServer(connectionString));
 
 
 

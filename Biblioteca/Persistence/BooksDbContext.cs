@@ -1,7 +1,7 @@
 ﻿using Biblioteca.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Biblioteca.Persistency;
+namespace Biblioteca.Persistence;
 
 public class BooksDbContext : DbContext
 {
@@ -11,9 +11,6 @@ public class BooksDbContext : DbContext
     }
 
     public DbSet<Book> Books { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<Loan> Loans { get; set; }
-
 
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -21,6 +18,8 @@ public class BooksDbContext : DbContext
         builder.Entity<Book>(e =>
         {
             e.HasKey(e => e.Id);
+            e.Property(e => e.ISBN)
+            .HasMaxLength(13);
         });
 
         base.OnModelCreating(builder);
