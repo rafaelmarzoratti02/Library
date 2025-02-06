@@ -7,6 +7,7 @@ public class User : BaseEntity
         Name = name;
         Email = email;
         Birthdate = birthdate;
+        Loans = [];
     }
 
     public string Name{ get; set; }
@@ -19,6 +20,5 @@ public class User : BaseEntity
         Name = name;
         Email = email;
         Birthdate = birthdate;
-        Loans = [];
     }
 }
