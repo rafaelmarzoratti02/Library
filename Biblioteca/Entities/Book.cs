@@ -4,7 +4,7 @@ namespace Biblioteca.Entities;
 
 public class Book : BaseEntity
 {
-    public Book(string title, string autor, string iSBN, int anoDePublicacao)
+    public Book(string title, string autor, string iSBN, int anoDePublicacao): base()
     {
         Title = title;
         Autor = autor;
@@ -26,9 +26,5 @@ public class Book : BaseEntity
         AnoDePublicacao = anoDePublicacao;
     }
 
-    public void SetAsDeleted()
-    {
-        IsDeleted = true;
-    }
 }
  

@@ -11,7 +11,7 @@ public class BooksDbContext : DbContext
     }
 
     public DbSet<Book> Books { get; set; }
-
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -20,6 +20,11 @@ public class BooksDbContext : DbContext
             e.HasKey(e => e.Id);
             e.Property(e => e.ISBN)
             .HasMaxLength(13);
+        });
+
+        builder.Entity<User>(e =>
+        { 
+            e.HasKey(e => e.Id);
         });
 
         base.OnModelCreating(builder);
