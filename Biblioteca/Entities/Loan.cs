@@ -2,6 +2,7 @@
 
 public class Loan : BaseEntity
 {
+    public Loan() { }
     public Loan(int idBook, int idUser)
     {
         IdBook = idBook;
