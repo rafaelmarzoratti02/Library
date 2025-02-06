@@ -30,6 +30,12 @@ public class BooksController : ControllerBase
     public IActionResult GetById(int id)
     {
         var book = _context.Books.SingleOrDefault(e => e.Id == id);
+
+        if(book is null)
+        {
+            return NotFound();
+        }
+
         var model = BookViewModel.FromEntity(book);
         return Ok(model);
     }
