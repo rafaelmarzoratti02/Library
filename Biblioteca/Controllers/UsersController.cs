@@ -3,17 +3,18 @@ using Biblioteca.Persistence;
 using Library.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.Controllers;
 
-[Route("api/user")]
+[Route("api/users")]
 [ApiController]
-public class UserController : ControllerBase
+public class UsersController : ControllerBase
 {
 
     private readonly BooksDbContext _context;
 
-    public UserController(BooksDbContext context)
+    public UsersController(BooksDbContext context)
     {
         _context = context;
     }
@@ -21,7 +22,10 @@ public class UserController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        var users = _context.Users.Where(e => !e.IsDeleted);
+        var users = _context.Users
+            .Include(e => e.Loans)
+            .Where(e => !e.IsDeleted);
+
         var model = users.Select(e => UserViewModel.FromEntity(e));
 
         return Ok(model);

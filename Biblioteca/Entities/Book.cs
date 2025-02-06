@@ -10,12 +10,14 @@ public class Book : BaseEntity
         Autor = autor;
         ISBN = iSBN;
         AnoDePublicacao = anoDePublicacao;
+        Loans = [];
     }
 
     public string Title { get; set; }
     public string Autor { get; set; }
     public string ISBN { get; set; }
     public int AnoDePublicacao { get; set; }
+    public List<Loan> Loans { get; set; }
 
 
     public void Update(string title, string autor, string iSBN, int anoDePublicacao)
