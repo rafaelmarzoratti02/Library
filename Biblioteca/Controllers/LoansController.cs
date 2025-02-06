@@ -53,11 +53,10 @@ public class LoansController : ControllerBase
     {
         var loan = model.ToEntity();
 
-
         _context.Loans.Add(loan);
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetById), new { id = loan.Id }, loan);
+        return CreatedAtAction(nameof(GetById), new {  id = loan.Id }, model);
 
     }
 
