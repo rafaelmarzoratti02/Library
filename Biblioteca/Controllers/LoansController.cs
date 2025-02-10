@@ -4,6 +4,7 @@ using Library.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Library.Controllers;
 
@@ -93,10 +94,14 @@ public class LoansController : ControllerBase
 
         if(loan.ReturnDate > loan.Deadline)
         {
-            return Ok("Atrasado!");
+            TimeSpan diff = loan.ReturnDate - loan.Deadline;
+
+            int diffInDays = diff.Days;
+
+            return Ok($"Atrasado em {diffInDays}!");
         }
 
-        return Ok();
+        return Ok("Entregue no tempo!");
 
     }
   
