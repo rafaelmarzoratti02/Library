@@ -23,7 +23,8 @@ public class UsersController : ControllerBase
     public IActionResult Get()
     {
         var users = _context.Users
-            .Include(e => e.Loans)
+            .Include(e=> e.Loans)
+            .ThenInclude(e=> e.Book)
             .Where(e => !e.IsDeleted);
 
         var model = users.Select(e => UserViewModel.FromEntity(e));

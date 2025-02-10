@@ -54,7 +54,7 @@ namespace Library.Pesistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("Biblioteca.Entities.Loan", b =>
@@ -92,7 +92,7 @@ namespace Library.Pesistence.Migrations
 
                     b.HasIndex("IdUser");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", (string)null);
                 });
 
             modelBuilder.Entity("Biblioteca.Entities.User", b =>
@@ -122,7 +122,7 @@ namespace Library.Pesistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Biblioteca.Entities.Loan", b =>

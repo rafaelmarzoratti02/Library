@@ -22,6 +22,7 @@ public class Loan : BaseEntity
     public void ReturnBook()
     {
         ReturnDate = DateTime.Now;
+        SetAsDeleted();
     }
 
 }

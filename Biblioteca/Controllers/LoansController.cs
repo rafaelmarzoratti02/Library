@@ -23,8 +23,9 @@ public class LoansController : ControllerBase
     {
         var loans = _context.Loans
          .Include(e => e.User)
-         .Include(e => e.Book) 
+         .Include(e => e.Book)
          .Where(e => !e.IsDeleted);
+         ;
 
         var model = loans.Select(e => LoanItemViewModel.FromEntity(e));
 
@@ -77,6 +78,27 @@ public class LoansController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id}")]
+    public IActionResult ReturnBook(int id)
+    {
+        var loan = _context.Loans.FirstOrDefault(e=> e.Id == id );
+        if(loan is null)
+        {
+            return NotFound();
+        }
+
+        loan.ReturnBook();
+        _context.Loans.Update(loan);
+        _context.SaveChanges();
+
+        if(loan.ReturnDate > loan.Deadline)
+        {
+            return Ok("Atrasado!");
+        }
+
+        return Ok();
+
+    }
   
 
 }
