@@ -1,6 +1,6 @@
-﻿using Biblioteca.Entities;
+﻿using Library.Core.Entities;
 
-namespace Library.Models;
+namespace Library.Application.Models;
 
 public class LoanViewModel
 {

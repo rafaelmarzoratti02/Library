@@ -1,7 +1,6 @@
-﻿using Biblioteca.Entities;
-using System.Net.Sockets;
+﻿using Library.Core.Entities;
 
-namespace Biblioteca.Models;
+namespace Library.Application.Models;
 
 public class CreateBookInputModel
 {

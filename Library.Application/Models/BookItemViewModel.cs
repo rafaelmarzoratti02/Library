@@ -1,6 +1,6 @@
-﻿using Biblioteca.Entities;
+﻿using Library.Core.Entities;
 
-namespace Biblioteca.Models;
+namespace Library.Application.Models;
 
 public class BookItemViewModel
 {
@@ -16,6 +16,6 @@ public class BookItemViewModel
 
 
     public static BookItemViewModel FromEntity(Book book)
-       => new BookItemViewModel(book.Id ,book.Title, book.Autor);
+       => new BookItemViewModel(book.Id, book.Title, book.Autor);
 
 }

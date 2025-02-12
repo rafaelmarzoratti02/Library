@@ -1,4 +1,5 @@
-using Biblioteca.Persistence;
+using Library.Application;
+using Library.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,9 +10,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddApplication();
 
 var connectionString = builder.Configuration.GetConnectionString("BibliotecaCs");
-
 builder.Services.AddDbContext<BooksDbContext>(e => e.UseSqlServer(connectionString));
 
 

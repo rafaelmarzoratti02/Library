@@ -1,4 +1,4 @@
-﻿namespace Biblioteca.Entities;
+﻿namespace Library.Core.Entities;
 
 public class Loan : BaseEntity
 {
@@ -26,4 +26,3 @@ public class Loan : BaseEntity
     }
 
 }
- 

@@ -1,4 +1,4 @@
-﻿namespace Library.Models;
+﻿namespace Library.Application.Models;
 
 public class UpdateUserInputModel
 {

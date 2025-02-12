@@ -1,4 +1,4 @@
-﻿namespace Biblioteca.Entities;
+﻿namespace Library.Core.Entities;
 
 public class BaseEntity
 {

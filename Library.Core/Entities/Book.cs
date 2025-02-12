@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Biblioteca.Entities;
+﻿namespace Library.Core.Entities;
 
 public class Book : BaseEntity
 {
-    public Book(string title, string autor, string iSBN, int anoDePublicacao): base()
+    public Book(string title, string autor, string iSBN, int anoDePublicacao) : base()
     {
         Title = title;
         Autor = autor;
@@ -29,4 +27,3 @@ public class Book : BaseEntity
     }
 
 }
- 

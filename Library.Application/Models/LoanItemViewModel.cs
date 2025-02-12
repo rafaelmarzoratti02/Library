@@ -1,6 +1,6 @@
-﻿using Biblioteca.Entities;
+﻿using Library.Core.Entities;
 
-namespace Library.Models;
+namespace Library.Application.Models;
 
 public class LoanItemViewModel
 {
@@ -15,7 +15,7 @@ public class LoanItemViewModel
     public int Id { get; set; }
     public string BookTitle { get; set; }
     public string UserName { get; set; }
-    public  DateTime Deadline { get; set; }
+    public DateTime Deadline { get; set; }
 
     public static LoanItemViewModel FromEntity(Loan loan) =>
         new LoanItemViewModel(loan.Id, loan.Book.Title, loan.User.Name, loan.Deadline);

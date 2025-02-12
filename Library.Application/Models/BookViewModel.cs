@@ -1,6 +1,6 @@
-﻿using Biblioteca.Entities;
+﻿using Library.Core.Entities;
 
-namespace Biblioteca.Models;
+namespace Library.Application.Models;
 
 public class BookViewModel
 {
@@ -21,7 +21,7 @@ public class BookViewModel
     public static BookViewModel FromEntity(Book book)
     {
         var loans = book.Loans.Select(e => e.User.Name).ToList();
-        return new BookViewModel(book.Title, book.Autor, book.ISBN, book.AnoDePublicacao, loans); 
+        return new BookViewModel(book.Title, book.Autor, book.ISBN, book.AnoDePublicacao, loans);
     }
-        
+
 }

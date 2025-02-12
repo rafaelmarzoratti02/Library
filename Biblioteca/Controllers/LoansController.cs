@@ -1,12 +1,9 @@
-﻿using Biblioteca.Entities;
-using Biblioteca.Persistence;
-using Library.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Library.Application.Models;
+using Library.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Library.Controllers;
+namespace Library.API.Controllers;
 
 [Route("api/loans")]
 [ApiController]
@@ -26,7 +23,7 @@ public class LoansController : ControllerBase
          .Include(e => e.User)
          .Include(e => e.Book)
          .Where(e => !e.IsDeleted);
-         ;
+        ;
 
         var model = loans.Select(e => LoanItemViewModel.FromEntity(e));
 
@@ -37,11 +34,11 @@ public class LoansController : ControllerBase
     public IActionResult GetById(int id)
     {
         var loan = _context.Loans
-            .Include (e => e.User)
+            .Include(e => e.User)
             .Include(e => e.Book)
            .FirstOrDefault(e => e.Id == id);
 
-        if(loan is null)
+        if (loan is null)
         {
             return NotFound();
         }
@@ -58,7 +55,7 @@ public class LoansController : ControllerBase
         _context.Loans.Add(loan);
         _context.SaveChanges();
 
-        return CreatedAtAction(nameof(GetById), new {  id = loan.Id }, model);
+        return CreatedAtAction(nameof(GetById), new { id = loan.Id }, model);
 
     }
 
@@ -67,7 +64,7 @@ public class LoansController : ControllerBase
     {
         var loan = _context.Loans.FirstOrDefault(e => e.Id == id);
 
-        if(loan is null)
+        if (loan is null)
         {
             return NotFound();
         }
@@ -82,8 +79,8 @@ public class LoansController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult ReturnBook(int id)
     {
-        var loan = _context.Loans.FirstOrDefault(e=> e.Id == id );
-        if(loan is null)
+        var loan = _context.Loans.FirstOrDefault(e => e.Id == id);
+        if (loan is null)
         {
             return NotFound();
         }
@@ -92,7 +89,7 @@ public class LoansController : ControllerBase
         _context.Loans.Update(loan);
         _context.SaveChanges();
 
-        if(loan.ReturnDate > loan.Deadline)
+        if (loan.ReturnDate > loan.Deadline)
         {
             TimeSpan diff = loan.ReturnDate - loan.Deadline;
 
@@ -104,6 +101,6 @@ public class LoansController : ControllerBase
         return Ok("Entregue no tempo!");
 
     }
-  
+
 
 }
