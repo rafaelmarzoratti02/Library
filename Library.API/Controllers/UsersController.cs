@@ -2,6 +2,7 @@
 using Library.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Library.Application.Services;
 
 namespace Library.API.Controllers;
 
@@ -10,62 +11,51 @@ namespace Library.API.Controllers;
 public class UsersController : ControllerBase
 {
 
-    private readonly BooksDbContext _context;
+    private readonly IUserService _userService;
 
-    public UsersController(BooksDbContext context)
+    public UsersController(IUserService userService)
     {
-        _context = context;
+        _userService = userService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var users = _context.Users
-            .Include(e => e.Loans)
-            .ThenInclude(e => e.Book)
-            .Where(e => !e.IsDeleted);
+        var result = _userService.GetAll();
 
-        var model = users.Select(e => UserViewModel.FromEntity(e));
-
-        return Ok(model);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var user = _context.Users.SingleOrDefault(e => e.Id == id);
+        var result = _userService.GetById(id);
 
-        if (user is null)
+        if (!result.IsSucess)
         {
-            return NotFound();
+            return NotFound(result.Message);
         }
 
-        var model = UserViewModel.FromEntity(user);
-        return Ok(model);
+        return Ok(result);
     }
 
     [HttpPost]
     public ActionResult Post(CreateUserInputModel model)
     {
-        var user = model.ToEntity();
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        var result = _userService.Insert(model);
 
-        return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+        return CreatedAtAction(nameof(GetById), new { Id = result.Data }, model);
     }
 
     [HttpPut("{id}")]
-    public IActionResult Put(int id, UpdateUserInputModel model)
+    public IActionResult Put(UpdateUserInputModel model)
     {
-        var user = _context.Users.FirstOrDefault(e => e.Id == id);
-        if (user is null)
-        {
-            return NotFound();
-        }
+        var result = _userService.Update(model);
 
-        user.Update(model.Name, model.Email, model.Birthdate);
-        _context.Users.Update(user);
-        _context.SaveChanges();
+        if (!result.IsSucess)
+        {
+            return NotFound(result.Message);
+        }
 
         return NoContent();
     }
@@ -73,15 +63,12 @@ public class UsersController : ControllerBase
     [HttpDelete]
     public IActionResult Delete(int id)
     {
-        var user = _context.Users.FirstOrDefault(e => e.Id == id);
-        if (user is null)
-        {
-            return NotFound();
-        }
+        var result = _userService.Delete(id);
 
-        user.SetAsDeleted();
-        _context.Users.Update(user);
-        _context.SaveChanges();
+        if (!result.IsSucess)
+        {
+            return NotFound(result.Message);
+        }
 
         return NoContent();
     }

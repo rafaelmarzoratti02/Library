@@ -9,12 +9,10 @@ namespace Biblioteca.Controllers;
 [ApiController]
 public class BooksController : ControllerBase
 {
-    private readonly BooksDbContext _context;
     private readonly IBookService _bookService;
 
-    public BooksController(BooksDbContext context, IBookService bookService)
+    public BooksController(IBookService bookService)
     {
-        _context = context;
         _bookService = bookService;
     }
 
