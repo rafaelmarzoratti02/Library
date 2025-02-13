@@ -22,6 +22,9 @@ public class ResultViewModel
     public static ResultViewModel Sucess()
         => new();
 
+    public static ResultViewModel Sucess(string message)
+        => new(true, message);
+
     public static ResultViewModel Error(string message)
         => new(false, message);
 

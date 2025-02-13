@@ -1,4 +1,5 @@
 ﻿using Library.Application.Models;
+using Library.Application.Services;
 using Library.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,69 +10,49 @@ namespace Library.API.Controllers;
 [ApiController]
 public class LoansController : ControllerBase
 {
-    private readonly BooksDbContext _context;
 
-    public LoansController(BooksDbContext context)
+    private readonly ILoanService _loanService;
+
+    public LoansController(ILoanService loanService)
     {
-        _context = context;
+        _loanService = loanService;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-        var loans = _context.Loans
-         .Include(e => e.User)
-         .Include(e => e.Book)
-         .Where(e => !e.IsDeleted);
-        ;
+        var result = _loanService.GetAll();
 
-        var model = loans.Select(e => LoanItemViewModel.FromEntity(e));
-
-        return Ok(model);
+        return Ok(result);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var loan = _context.Loans
-            .Include(e => e.User)
-            .Include(e => e.Book)
-           .FirstOrDefault(e => e.Id == id);
+       var result = _loanService.GetById(id);
 
-        if (loan is null)
-        {
-            return NotFound();
-        }
-
-        var model = LoanViewModel.FromEntity(loan);
-        return Ok(model);
+        return Ok(result);
     }
 
     [HttpPost]
     public IActionResult Post(CreateLoanInputModel model)
     {
-        var loan = model.ToEntity();
 
-        _context.Loans.Add(loan);
-        _context.SaveChanges();
+        var result = _loanService.Insert(model);
 
-        return CreatedAtAction(nameof(GetById), new { id = loan.Id }, model);
+        return CreatedAtAction(nameof(GetById), new { Id = result.Data }, model);
 
     }
 
     [HttpDelete]
     public IActionResult Delete(int id)
     {
-        var loan = _context.Loans.FirstOrDefault(e => e.Id == id);
+        var result = _loanService.Delete(id);
 
-        if (loan is null)
+        if (!result.IsSucess)
         {
-            return NotFound();
+            return BadRequest(result.Message);
         }
-
-        loan.SetAsDeleted();
-        _context.Loans.Update(loan);
-        _context.SaveChanges();
 
         return NoContent();
     }
@@ -79,28 +60,15 @@ public class LoansController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult ReturnBook(int id)
     {
-        var loan = _context.Loans.FirstOrDefault(e => e.Id == id);
-        if (loan is null)
+        var result = _loanService.ReturnBook(id);
+
+        if (!result.IsSucess)
         {
-            return NotFound();
+            return NotFound(result.Message);
         }
 
-        loan.ReturnBook();
-        _context.Loans.Update(loan);
-        _context.SaveChanges();
-
-        if (loan.ReturnDate > loan.Deadline)
-        {
-            TimeSpan diff = loan.ReturnDate - loan.Deadline;
-
-            int diffInDays = diff.Days;
-
-            return Ok($"Atrasado em {diffInDays}!");
-        }
-
-        return Ok("Entregue no tempo!");
+        return Ok(result);
 
     }
-
 
 }

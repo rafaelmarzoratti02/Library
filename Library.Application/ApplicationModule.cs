@@ -16,6 +16,7 @@ public static class ApplicationModule
     {
         services.AddScoped<IBookService, BookService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ILoanService, LoanService>();
 
         return services;
     }
