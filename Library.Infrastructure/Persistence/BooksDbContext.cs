@@ -20,8 +20,7 @@ public class BooksDbContext : DbContext
         builder.Entity<Book>(e =>
         {
             e.HasKey(e => e.Id);
-            e.Property(e => e.ISBN)
-            .HasMaxLength(13);
+
         });
 
         builder.Entity<User>(e =>
