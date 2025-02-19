@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Library.Application.Models;
-using Library.Infrastructure.Persistence;
 using Library.Application.Services;
+using MediatR;
+using Library.Application.Queries.BookQueries.GetAllBooks;
+using Library.Application.Queries.BookQueries.GetBookById;
+using Library.Application.Commands.BookCommands.DeleteBook;
+using Library.Application.Commands.BookCommands.InsertBook;
+using Library.Application.Commands.BookCommands.UpdateBook;
 
 namespace Biblioteca.Controllers;
 
@@ -9,25 +13,25 @@ namespace Biblioteca.Controllers;
 [ApiController]
 public class BooksController : ControllerBase
 {
-    private readonly IBookService _bookService;
+    private readonly IMediator _mediator;
 
-    public BooksController(IBookService bookService)
+    public BooksController( IMediator mediator)
     {
-        _bookService = bookService;
+        _mediator = mediator;
     }
 
     [HttpGet]
-    public IActionResult Get()
-    {   
-        var result = _bookService.GetAll(); 
+    public async Task<IActionResult> Get()
+    {
+        var result = await _mediator.Send(new GetAllBooksCommand());
 
         return Ok(result);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var result = _bookService.GetById(id);
+        var result = await _mediator.Send(new GetBookByIdCommand(id));
 
         if(!result.IsSucess)
         {
@@ -38,17 +42,17 @@ public class BooksController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(CreateBookInputModel model)
+    public async Task<ActionResult> Post(InsertBookCommand command)
     {
-       var result = _bookService.Insert(model);
+       var result =  await _mediator.Send(command);
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
+        return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
     }
 
     [HttpPut]
-    public IActionResult Put(UpdateBookInputModel model)
+    public async Task<IActionResult> Put(UpdateBookCommand command)
     {
-        var result = _bookService.Update(model);
+        var result = await  _mediator.Send(command);
 
         if (!result.IsSucess)
         {
@@ -59,9 +63,10 @@ public class BooksController : ControllerBase
     }
 
     [HttpDelete]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var result =_bookService.Delete(id);
+        var result = await _mediator.Send(new DeleteBookCommand(id));
+
         if (!result.IsSucess)
         {
             return BadRequest(result.Message);
