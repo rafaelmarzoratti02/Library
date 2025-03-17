@@ -72,4 +72,17 @@ public class UsersController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPut("login")]
+    public async Task<IActionResult> Login(LoginUserInputModel model)
+    {
+        var result = _userService.Login(model);
+
+        if (!result.IsSucess)
+        {
+            return NotFound(result.Message);
+        }
+
+        return Ok(result);
+    }
 }
