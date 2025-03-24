@@ -1,7 +1,11 @@
-﻿using Library.Application.Commands.BookCommands.InsertBook;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Library.Application.Commands.BookCommands.InsertBook;
 using Library.Application.Commands.LoanCommands.InsertLoan;
 using Library.Application.Models;
 using Library.Application.Services;
+
+
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,7 +17,8 @@ public static class ApplicationModule
     {
         services
             .AddServices()
-            .AddHandlers();
+            .AddHandlers()
+            .AddValidators();
         return services;
     }
 
@@ -30,6 +35,12 @@ public static class ApplicationModule
     {
         services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining <InsertBookCommand>());
         services.AddTransient<IPipelineBehavior<InsertLoanCommand, ResultViewModel<int>>, ValidateInsertLoanCommandBehavior>();
+        return services;
+    }
+
+    public static IServiceCollection AddValidators(this IServiceCollection services)
+    {
+        services.AddFluentValidationAutoValidation().AddValidatorsFromAssemblyContaining<InsertBookCommand>();
         return services;
     }
 }

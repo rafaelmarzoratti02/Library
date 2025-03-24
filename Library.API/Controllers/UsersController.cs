@@ -1,8 +1,11 @@
-﻿using Library.Application.Models;
+﻿using Library.Application.Commands.UserCommands.InsertUser;
+using Library.Application.Commands.UserCommands.LoginUser;
+using Library.Application.Models;
 using Library.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Library.Application.Services;
+using MediatR;
 
 namespace Library.API.Controllers;
 
@@ -12,10 +15,12 @@ public class UsersController : ControllerBase
 {
 
     private readonly IUserService _userService;
+    private readonly IMediator _mediator;
 
-    public UsersController(IUserService userService)
+    public UsersController(IUserService userService, IMediator mediator)
     {
         _userService = userService;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -40,11 +45,11 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(CreateUserInputModel model)
+    public async Task<ActionResult> Post(InsertUserCommand command)
     {
-        var result = _userService.Insert(model);
-
-        return CreatedAtAction(nameof(GetById), new { Id = result.Data }, model);
+        var result = await _mediator.Send(command);
+        
+        return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
     }
 
     [HttpPut("{id}")]
@@ -71,5 +76,18 @@ public class UsersController : ControllerBase
         }
 
         return NoContent();
+    }
+
+    [HttpPut("login")]
+    public async Task<IActionResult> Login(LoginUserCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (!result.IsSucess)
+        {
+            return NotFound(result.Message);
+        }
+
+        return Ok(result);
     }
 }

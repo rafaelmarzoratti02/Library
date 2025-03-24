@@ -6,11 +6,13 @@ using Library.Application.Queries.BookQueries.GetBookById;
 using Library.Application.Commands.BookCommands.DeleteBook;
 using Library.Application.Commands.BookCommands.InsertBook;
 using Library.Application.Commands.BookCommands.UpdateBook;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Biblioteca.Controllers;
 
 [Route("api/books")]
 [ApiController]
+[Authorize]
 public class BooksController : ControllerBase
 {
     private readonly IMediator _mediator;

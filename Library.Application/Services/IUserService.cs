@@ -9,5 +9,5 @@ public interface IUserService
     ResultViewModel<int> Insert(CreateUserInputModel model);
     ResultViewModel Update(UpdateUserInputModel model);
     ResultViewModel Delete(int id);
-
+    ResultViewModel Login(LoginUserInputModel model);
 }

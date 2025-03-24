@@ -82,4 +82,9 @@ public class UserService : IUserService
 
         return ResultViewModel.Sucess();
     }
+
+    public ResultViewModel Login(LoginUserInputModel model)
+    {
+        throw new NotImplementedException();
+    }
 }
