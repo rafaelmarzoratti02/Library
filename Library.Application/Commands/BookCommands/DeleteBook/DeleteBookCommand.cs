@@ -13,3 +13,4 @@ public class DeleteBookCommand : IRequest<ResultViewModel>
         Id = id;
     }
 }
+

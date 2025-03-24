@@ -9,6 +9,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.Core.Services;
+using Library.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Library.Infrastructure
 {
@@ -19,7 +23,8 @@ namespace Library.Infrastructure
         {
             services
                 .AddRepositories()
-                .AddData(configuration);
+                .AddData(configuration)
+                .AddAuth(configuration);
 
             return services;
         }
@@ -27,6 +32,8 @@ namespace Library.Infrastructure
         private static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
             return services;
         }
 
@@ -36,6 +43,29 @@ namespace Library.Infrastructure
 
             services.AddDbContext<BooksDbContext>(o => o.UseSqlServer(connectionString));
 
+            return services;
+        }
+
+        private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddScoped<IAuthService, AuthService>();
+            
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+
+                        ValidIssuer = configuration["Jwt:Issuer"],
+                        ValidAudience = configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey
+                            (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                    };
+                });
             return services;
         }
 
