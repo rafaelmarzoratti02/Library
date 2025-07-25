@@ -3,6 +3,7 @@
 namespace Library.Application.Models;
 
 public class BookItemViewModel
+
 {
     public BookItemViewModel(int id, string title, string autor)
     {

@@ -4,11 +4,7 @@ using Library.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Library.Core.Services;
 using Library.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -49,7 +45,6 @@ namespace Library.Infrastructure
         private static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IAuthService, AuthService>();
-            
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -66,6 +61,7 @@ namespace Library.Infrastructure
                             (Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
                     };
                 });
+            
             return services;
         }
 

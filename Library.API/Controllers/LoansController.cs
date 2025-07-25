@@ -4,6 +4,7 @@ using Library.Application.Commands.LoanCommands.ReturnBook;
 using Library.Application.Models;
 using Library.Application.Queries.BookQueries.GetAllBooks;
 using Library.Application.Queries.BookQueries.GetBookById;
+using Library.Application.Queries.LoanQueries.GetAllLoans;
 using Library.Application.Services;
 using Library.Infrastructure.Persistence;
 using MediatR;
@@ -30,7 +31,7 @@ public class LoansController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> Get()
     {
-        var result = await _mediator.Send(new GetAllBooksCommand());
+        var result = await _mediator.Send(new GetAllLoansCommand());
 
         return Ok(result);
     }
