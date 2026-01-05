@@ -6,6 +6,7 @@ using Library.Application.Queries.BookQueries.GetBookById;
 using Library.Application.Commands.BookCommands.DeleteBook;
 using Library.Application.Commands.BookCommands.InsertBook;
 using Library.Application.Commands.BookCommands.UpdateBook;
+using Library.Application.Queries.BookQueries.Sync;
 using Microsoft.AspNetCore.Authorization;
 
 namespace Biblioteca.Controllers;
@@ -26,6 +27,29 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> Get()
     {
         var result = await _mediator.Send(new GetAllBooksCommand());
+
+        return Ok(result);
+    }
+
+    [HttpGet("sync")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetBooksForSync()
+    {
+        if (!Request.Headers.TryGetValue("X-Api-Key", out var apiKey))
+        {
+            return Unauthorized(new { message = "API Key is missing" });
+        }
+
+        var configuredApiKey = HttpContext.RequestServices
+            .GetRequiredService<IConfiguration>()
+            .GetValue<string>("SyncApiKey");
+
+        if (apiKey != configuredApiKey)
+        {
+            return Unauthorized(new { message = "Invalid API Key" });
+        }
+
+        var result = await _mediator.Send(new GetBooksForSyncQuery());
 
         return Ok(result);
     }
